@@ -16,22 +16,21 @@ pipeline {
         git(url: 'https://github.com/adonkel/flask', branch: 'main')
       }
     }
-
- stage(Build Stage) {
+stage('Build Stage') {
     steps {
-      script {
-          dockerImage = docker.build(registry)
-      }
-    }
-  }
- stage(Deploy Stage) {
-     steps {
         script {
-         docker.withRegistry('', registryCredentials) {
-             dockerImage.push()
+            dockerImage = docker.build(registry)
         }
       }
-     }
-  } 
-  }
+    }
+stage('Deploy Stage') {
+    steps {
+        script {
+           docker.withRegistry('', registryCredentials) {
+                dockerImage.push()
+            }
+          }
+        }
+      }
+    }
 }
