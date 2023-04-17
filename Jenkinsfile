@@ -1,4 +1,9 @@
 pipeline {
+  environment {
+    registry = 'adonkel/flask_app'
+    registryCredentials = 'docker'
+    cluster_name = 'skillstorm'
+  }
   agent {
     node {
       label 'docker'
@@ -12,23 +17,21 @@ pipeline {
       }
     }
 
-    stage('Build/Shell Script') {
-      steps {
-        sh 'docker build -t adonkel/flask_app .'
+ stage(Build Stage) {
+    steps {
+      script {
+          dockerImage = docker.build(registry)
       }
     }
-
-    stage('Docker Login') {
-      steps {
-        sh 'docker login -u adonkel -p dckr_pat_mEoSvd_rFVc7Pau5k2hPyn--6u8'
+  }
+ stage(Deploy Stage) {
+     steps {
+        script {
+         docker.withRegistry('', registryCredentials) {
+             dockerImage.push()
+        }
       }
-    }
-
-    stage('Docker Push') {
-      steps {
-        sh 'docker push adonkel/flask_app'
-      }
-    }
-
+     }
+  } 
   }
 }
