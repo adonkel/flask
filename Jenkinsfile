@@ -3,6 +3,7 @@ pipeline {
     registry = 'adonkel/flask_app'
     registryCredentials = 'docker'
     cluster_name = 'skillstorm'
+    namespace = 'adonkel'
   }
   agent {
     node {
